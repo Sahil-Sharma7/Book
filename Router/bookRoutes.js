@@ -49,7 +49,6 @@ router.get('/delete',async(req,res) => {
 })
 
 router.post("/",upload.single("demo_image"), (req, res) => {
-    console.log('---------------11111111111111111------------------')
     const newBook = new Book({
         name : req.body.name,
         image: req.file.originalname,
@@ -60,9 +59,7 @@ router.post("/",upload.single("demo_image"), (req, res) => {
     })
     const token = req.headers.authorization
     if(token){
-        console.log('------------------22222222222222222---------------')
         jwt.verify(token,config.Secret_key,async(err,user) => {
-            console.log('-------------3333333333333333333---------------')
             if(err){ res.status(403).send('Invalid token')  }
             
             const savedBook = newBook.save()
