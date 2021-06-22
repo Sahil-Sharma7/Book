@@ -14,37 +14,16 @@ var storage = multer.diskStorage({
 const upload = multer({storage:storage});
 
 router.get('/',async(req,res) => {
-    const token = req.headers.authorization
-    if(token){
-        jwt.verify(token,config.Secret_key,async(err,user) => {
-            if(err){ res.status(403).send('Invalid token')  }
-            const books = await Book.find({})
-            res.send(books)
-        }) }
-    else{res.status(401).send('Autorization token not found')
-    }
+    const books = await Book.find({})
+    res.send(books)
 })
 router.get('/book',async(req,res) => {
-    const token = req.headers.authorization
-    if(token){
-        jwt.verify(token,config.Secret_key,async(err,user) => {
-            if(err){ res.status(403).send('Invalid token')  }
-            const book = await Book.find({_id : req.query.id})
-            res.send(book)
-        }) }
-    else{res.status(401).send('Autorization token not found')
-    }
+    const book = await Book.find({_id : req.query.id})
+    res.send(book)
 })
 router.get('/delete',async(req,res) => {
-    const token = req.headers.authorization
-    if(token){
-        jwt.verify(token,config.Secret_key,async(err,user) => {
-            if(err){ res.status(403).send('Invalid token')  }
-            await Book.remove({_id : req.query.id})
-            res.send('Book Deleted Successfully')
-        }) }
-    else{res.status(401).send('Autorization token not found')
-    }
+    await Book.remove({_id : req.query.id})
+    res.send('Book Deleted Successfully')
     
 })
 
@@ -57,17 +36,8 @@ router.post("/",upload.single("demo_image"), (req, res) => {
         title: req.body.title,
         is_active : req.body.is_active,
     })
-    const token = req.headers.authorization
-    if(token){
-        jwt.verify(token,config.Secret_key,async(err,user) => {
-            if(err){ res.status(403).send('Invalid token')  }
-            
-            const savedBook = newBook.save()
-           res.send("Book Saved Successfully")
-        }) }
-    else{res.status(401).send('Autorization token not found')
-    }
-
+    const savedBook = newBook.save()
+    res.send("Book Saved Successfully")
     
  });
 
@@ -76,16 +46,9 @@ router.post('/update',upload.single("demo_image"),async(req,res) => {
     if(req.file){
         obj.image = req.file.originalname
     }
-    const token = req.headers.authorization
-    if(token){
-        jwt.verify(token,config.Secret_key,async(err,user) => {
-            if(err){ res.status(403).send('Invalid token')  }
-            const book = await Book.updateOne({_id:req.query.id},obj)
+    const book = await Book.updateOne({_id:req.query.id},obj)
     console.log('book',book)
     res.send('Book Updated Successfully')
-        }) }
-    else{res.status(401).send('Autorization token not found')
-    }
     
     
 })
